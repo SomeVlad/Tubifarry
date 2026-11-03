@@ -7,3 +7,5 @@ The regression suite invokes the real public indexer generator in eight cases: e
 Build with .NET 8: `dotnet test Tubifarry.Tests/Tubifarry.Tests.csproj --configuration Release -p:CI=true -p:Branch=master -p:TreatWarningsAsErrors=false`.
 
 This is a local backport, not a new upstream release. Runtime deployment requires a checked native backup/restore and an isolated plugin-load test. Return to an official package when this fix is released.
+
+For a runtime package, first build `Submodules/Lidarr/src/Lidarr.Http/Lidarr.Http.csproj` with `-p:AssemblyVersion=3.1.6.5102` so all three reference assemblies match the deployed core. Then build the plugin and tests with `-p:Version=2.3.0.1 -p:AssemblyVersion=2.3.0.1 -p:MinimumLidarrVersion=3.1.6.5102 -p:BuildProjectReferences=false`. Verify the plugin's three Lidarr references before packaging. The vendored core uses a placeholder `10.0.0.*` identity outside its official CI; the reference-build identity must match the real deployed core. No core code is modified or deployed.
